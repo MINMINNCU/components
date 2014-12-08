@@ -404,7 +404,7 @@ defined('_JEXEC') or die;
 
     <div class="itemAuthorDetails">
       <h3 class="itemAuthorName">
-      	<a rel="author" href="<?php echo $this->item->author->link; ?>"><?php echo $this->item->author->name; ?></a>
+      	<a id="itemNameDetails" rel="author" href="<?php echo $this->item->author->link; ?>"><?php echo $this->item->author->name; ?></a>
       </h3>
 
       <?php if($this->item->params->get('itemAuthorDescription') && !empty($this->item->author->profile->description)): ?>

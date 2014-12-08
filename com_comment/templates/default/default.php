@@ -69,7 +69,7 @@ JHtml::script('media/com_comment/js/libraries/requirejs/require.min.js');
 JHtml::script('media/com_comment/js/dynamictextarea.js');
 JHtml::script('media/com_comment/js/String.MD5.js');
 JHtml::script('media/com_comment/js/String.UTF-8.js');
-JHtml::script('media/com_comment/js/libraries/placeholder/placeholder.js');
+JHtml::script('media/com_comment/js/libraries/placeholder/placeholder.js');JHtml::script('media/com_comment/js/tab.js');
 
 if ($config->get('template_params.emulate_bootstrap', 1))
 {
