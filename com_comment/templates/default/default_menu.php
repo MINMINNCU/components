@@ -12,17 +12,20 @@ $user = JFactory::getUser();
 $config = $this->config;
 ?>
 
-<div class="row-fluid ccomment-menu">
+<div class="row-fluid ccomment-menu" style="display:none;">
+
 	<h4 class="pull-left">
 		<?php echo JText::_('COM_COMMENT_COMMENTS_TITLE'); ?>
 		(<span class="ccomment-comment-counter">{{comment_count}}</span>)
 	</h4>
 	<div class="pull-right">
+		<!-- 
 		<?php if (ccommentHelperSecurity::canPost($config) && !$this->discussionClosed) : ?>
 			<button class="ccomment-add-new btn btn-mini" title='<?php echo JText::_('COM_COMMENT_ADDNEW'); ?>'>
 				<?php echo JText::_('COM_COMMENT_ADDNEW'); ?>
 			</button>
 		<?php endif; ?>
+		 -->
 		<?php // show the search only if it is on and we have comments in the item ?>
 		<?php if ($config->get('template_params.show_search', 0) && $this->count) : ?>
 			<button class="btn ccomment-search btn-mini" title='<?php echo JText::_('COM_COMMENT_SEARCH'); ?>'>
@@ -35,4 +38,5 @@ $config = $this->config;
 			</a>
 		<?php endif; ?>
 	</div>
+
 </div>

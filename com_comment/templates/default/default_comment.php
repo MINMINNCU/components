@@ -97,7 +97,7 @@ else if ((int)$this->config->get('layout.tree') === 2)
 				</button>
 			<?php endif; ?>
 
-			<div class="pull-right ccomment-moderation">
+<!-- 			<div class="pull-right ccomment-moderation">
 				{{#commentModerator}}
 				<button class="btn btn-mini btn-ccomment-edit" data-action="unpublish">
 					<?php echo JText::_('COM_COMMENT_EDIT'); ?>
@@ -122,6 +122,7 @@ else if ((int)$this->config->get('layout.tree') === 2)
 					        data-action="delete"><?php echo JText::_('COM_COMMENT_DELETE'); ?></button>
 				<?php endif; ?>
 			</div>
+ -->
 		</div>
 	</div>
 </div>

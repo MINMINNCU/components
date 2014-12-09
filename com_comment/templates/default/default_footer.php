@@ -12,7 +12,7 @@ $user = JFactory::getUser();
 $config = $this->config;
 ?>
 
-<div class="row-fluid small muted ccomment-powered">
+<div class="row-fluid small muted ccomment-powered" style="display:none;">
 	<p class="text-center">
 		<?php echo JText::sprintf('COM_COMMENT_POWERED_BY', 'http://compojoom.com'); ?>
 	</p>
