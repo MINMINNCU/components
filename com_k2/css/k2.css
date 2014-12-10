@@ -194,7 +194,7 @@ div.itemImageBlock {padding:8px;margin:0 0 16px 0;}
 div.itemIntroText {color:#444;font-size:18px;font-weight:bold;line-height:24px;padding:4px 0 12px 0;}
 	div.itemIntroText img {}
 
-div.itemFullText {}
+div.itemFullText {text-align: center;}
 	div.itemFullText h3 {margin:0;padding:16px 0 4px 0;}
 	div.itemFullText p {}
 	div.itemFullText img {}

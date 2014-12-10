@@ -72,7 +72,6 @@ JHtml::script('media/com_comment/js/String.UTF-8.js');
 JHtml::script('media/com_comment/js/libraries/placeholder/placeholder.js');
 JHtml::script('media/com_comment/js/tab.js');
 
-
 if ($config->get('template_params.emulate_bootstrap', 1))
 {
 	JHtml::stylesheet('media/com_comment/templates/default/css/bootstrap.css');

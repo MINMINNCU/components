@@ -30,10 +30,11 @@ $user = JFactory::getUser();
 			<textarea name='comment' class='ccomment-textarea span12 required' cols='5' tabindex="1"
 			          rows='10'
 			          placeholder="<?php echo JText::_('COM_COMMENT_LEAVE_COMMENT'); ?>"
+			          style="radius:3px;"
 				></textarea>
 
 			<?php if ($this->config->get('template_params.form_ubb')) : ?>
-				<div class="ccomment-form-ubb">
+				<div class="ccomment-form-ubb" style="display: none; opacity: 1; visibility: visible;">
 					<?php if ($this->config->get('layout.support_emoticons')) : ?>
 						<div class='ccomment-emoticons hide'>
 							<?php foreach ($this->emoticons as $key => $value) : ?>
