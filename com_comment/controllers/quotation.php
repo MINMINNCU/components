@@ -262,8 +262,21 @@ class ccommentControllerQuotation extends JControllerLegacy
     {        
         $sid = (int)$_POST["id"];
 
+        //確認賣方義務是否完成（買方顯示交易完成）
+        $db=JFactory::getDbo();
+        $db->setQuery('SELECT `sent_item` FROM `#__transactions` WHERE `id`='.$sid);
+        $db->query();
+        $sent_item = $db->loadResult();
+        if($sent_item==1){
+
+            $buyer_status=='交易完成';
+
+        }else{
+
+
+        }
+
         //變更買方交易狀態
-      
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
@@ -277,13 +290,6 @@ class ccommentControllerQuotation extends JControllerLegacy
         $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
         $db->setQuery($query);        
         $result = $db->execute();
-
-        //確認賣方義務是否完成（買方顯示交易完成）
-        $db=JFactory::getDbo();
-        $db->setQuery('SELECT `id` FROM `#__transactions` WHERE `account_id`='.$seller);
-        $db->query();
-        $scontact = $db->loadResult();
-        $scount=sizeof($scontact);
 
 
     }
