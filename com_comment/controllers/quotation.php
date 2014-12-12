@@ -64,7 +64,7 @@ class ccommentControllerQuotation extends JControllerLegacy
       $transaction->created=date("Y-m-d H:i:s");
        
       // Insert the object into transaction table.
-      $result = JFactory::getDbo()->insertObject('#__transaction', $transaction);
+      $result = JFactory::getDbo()->insertObject('#__transactions', $transaction);
 
     }
 
