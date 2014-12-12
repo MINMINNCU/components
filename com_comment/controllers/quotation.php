@@ -68,25 +68,50 @@ class ccommentControllerQuotation extends JControllerLegacy
 
     }
 
-    public function confirmQuotation($quotation_id,$confirm)
+    public function confirmTransaction()
     {        
-    $date=date("Y-m-d H:i:s");
-        $db=JFactory::getDbo();
-        $db->setQuery('UPDATE `#__quotation` SET `confirm`='.$confirm.',`confirmTime`='.$date.'WHERE `id`='.$quotation_id);
-    }
-
-    public function setStatus($accept,$confirm,$quotation_id)
-    {
-              
-        if($accept==true && $confirm=true){
-      $status==true;
-        }
-        else{
-          $status==false;
-        }
+        $sid = (int)$_POST["id"];
+        $seller = (int)$_POST["seller"];
+        $itemid = (int)$_POST["item"];
 
         $db=JFactory::getDbo();
-        $db->setQuery('UPDATE `#__quotation` SET `status`='.$status.'WHERE `id`='.$quotation_id);
+        $db->setQuery('UPDATE `#__quotation` SET `confirm`=true WHERE `article_id`='.$itemid. ' AND `user_id`='.$seller);
+        $db->query();
 
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        // Fields to update.
+        $fields = array(
+        $db->quoteName('buyer_status') . ' = ' . $db->quote('請填寫資料'),
+        $db->quoteName('seller_status') . ' = ' . $db->quote('請填寫資料')
+        );
+        // Conditions for which records should be updated.
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($sid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
     }
+
+       public function cancelTransaction()
+    {        
+        $sid = (int)$_POST["id"];
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        // Fields to update.
+        $fields = array(
+        $db->quoteName('buyer_status') . ' = ' . $db->quote('交易取消'),
+        $db->quoteName('seller_status') . ' = ' . $db->quote('交易取消')
+        );
+        // Conditions for which records should be updated.
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($sid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
+    }
+
 }
