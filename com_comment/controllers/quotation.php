@@ -31,6 +31,12 @@ class ccommentControllerQuotation extends JControllerLegacy
       $seller = $db->loadResult();
       //notify
 
+      //get article id
+      $db=JFactory::getDbo();
+      $db->setQuery('SELECT `article_id` FROM `#__quotation` WHERE `id`='.$quotation_id);
+      $db->query();
+      $item = $db->loadResult();
+
       // Create and populate an object.
       $profile = new stdClass();
       $profile->from_id = $buyer;
@@ -44,14 +50,22 @@ class ccommentControllerQuotation extends JControllerLegacy
       
       echo 'you got new quotation!';
 
-    }
+      // Create and populate an object.
+      $transaction = new stdClass();
+      $transaction->item_id = $item;
+      $transaction->buyer_id = $buyer;
+      $transaction->seller_id = $seller;
+      $transaction->paid_cash = 0;
+      $transaction->received_item = 0;
+      $transaction->received_cash = 0;
+      $transaction->sent_item = 0;
+      $transaction->buyer_status = '等待對方確認';
+      $transaction->seller_status = '對方已接受報價';
+      $transaction->created=date("Y-m-d H:i:s");
+       
+      // Insert the object into transaction table.
+      $result = JFactory::getDbo()->insertObject('#__transaction', $transaction);
 
-    public function notify($buyer,$seller)
-    {     
-
-    $date=date("Y-m-d H:i:s");
-        $db=JFactory::getDbo();
-        $db->setQuery('INSERT INTO `#__notify`(`from_id`, `to_id`, `type`, `detail`, `created`) VALUES ('.$buyer.','.$seller.',2,RequestForConfirm,'.$date.')');
     }
 
     public function confirmQuotation($quotation_id,$confirm)
