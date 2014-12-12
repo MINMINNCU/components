@@ -78,20 +78,65 @@ class ccommentControllerQuotation extends JControllerLegacy
         $db->setQuery('UPDATE `#__quotation` SET `confirm`=true WHERE `article_id`='.$itemid. ' AND `user_id`='.$seller);
         $db->query();
 
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        // Fields to update.
-        $fields = array(
-        $db->quoteName('buyer_status') . ' = ' . $db->quote('請填寫資料'),
-        $db->quoteName('seller_status') . ' = ' . $db->quote('請填寫資料')
-        );
-        // Conditions for which records should be updated.
-        $conditions = array(
-            $db->quoteName('id') . ' = ' . $db->quote($sid)
-        );       
-        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
-        $db->setQuery($query);        
-        $result = $db->execute();
+        //check if seller has contact
+        $db=JFactory::getDbo();
+        $db->setQuery('SELECT `id` FROM `#__contact` WHERE `account_id`='.$seller);
+        $db->query();
+        $scontact = $db->loadResult();
+        $scount=sizeof($scontact);
+
+        //check if buyer has contact
+        $db=JFactory::getDbo();
+        $db->setQuery('SELECT `buyer_id` FROM `#__transactions` WHERE `seller_id`='.$seller);
+        $db->query();
+        $buyer = $db->loadResult();
+
+        $db=JFactory::getDbo();
+        $db->setQuery('SELECT `id` FROM `#__contact` WHERE `account_id`='.$buyer);
+        $db->query();
+        $bcontact = $db->loadResult();
+        $bcount=sizeof($bcontact);
+    
+        if($scount==0 && $bcount==0){
+
+          $buyer_status == '請填寫資料';
+          $seller_status == '請填寫資料';
+
+        }
+        elseif($scount==1 && $bcount==0){
+
+          $buyer_status == '請填寫資料';
+          $seller_status == '交易進行中';
+
+        }
+        elseif($scount==0 && $bcount==1){
+
+          $buyer_status == '交易進行中';
+          $seller_status == '請填寫資料';
+
+        }
+        elseif($scount==1 && $bcount==1){
+
+          $buyer_status == '交易進行中';
+          $seller_status == '交易進行中';
+
+        }
+
+          $db = JFactory::getDbo();
+          $query = $db->getQuery(true);
+
+          $fields = array(
+          $db->quoteName('buyer_status') . ' = ' . $db->quote($buyer_status),
+          $db->quoteName('seller_status') . ' = ' . $db->quote($seller_status)
+          );
+
+          $conditions = array(
+              $db->quoteName('id') . ' = ' . $db->quote($sid)
+          );       
+          $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+          $db->setQuery($query);        
+          $result = $db->execute();
+        
     }
 
        public function cancelTransaction()
@@ -100,12 +145,12 @@ class ccommentControllerQuotation extends JControllerLegacy
 
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
-        // Fields to update.
+
         $fields = array(
         $db->quoteName('buyer_status') . ' = ' . $db->quote('交易取消'),
         $db->quoteName('seller_status') . ' = ' . $db->quote('交易取消')
         );
-        // Conditions for which records should be updated.
+
         $conditions = array(
             $db->quoteName('id') . ' = ' . $db->quote($sid)
         );       
@@ -113,5 +158,156 @@ class ccommentControllerQuotation extends JControllerLegacy
         $db->setQuery($query);        
         $result = $db->execute();
     }
+
+        public function fillSellerContact()
+    {        
+        $sid = (int)$_POST["id"];
+        $name = (int)$_POST["name"];
+        $phone = (int)$_POST["phone"];
+        $option_text = (int)$_POST["option_text"];
+
+        // write new contact
+        $contact = new stdClass();
+        $contact->name = $name;
+        $contact->phone = $phone;
+        $contact->option_text = $option_text;
+        $contact->created=date("Y-m-d H:i:s");
+         
+        // Insert the object into contact table.
+        $result = JFactory::getDbo()->insertObject('#__contact', $contact);
+
+        //Update Seller Status 
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $fields = array(
+        $db->quoteName('seller_status') . ' = ' . $db->quote('交易進行中')
+        );
+
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($sid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
+    }
+
+     public function fillBuyerContact()
+    {        
+        $sid = (int)$_POST["id"];
+        $name = (int)$_POST["name"];
+        $phone = (int)$_POST["phone"];
+        $option_text = (int)$_POST["option_text"];
+
+        // write new contact
+        $contact = new stdClass();
+        $contact->name = $name;
+        $contact->phone = $phone;
+        $contact->option_text = $option_text;
+        $contact->created=date("Y-m-d H:i:s");
+         
+        // Insert the object into contact table.
+        $result = JFactory::getDbo()->insertObject('#__contact', $contact);
+
+        //Update Buyer Status 
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $fields = array(
+        $db->quoteName('buyer_status') . ' = ' . $db->quote('交易進行中')
+        );
+
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($sid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
+    }
+
+    public function fillBuyerContact()
+    {        
+        $sid = (int)$_POST["id"];
+        $name = (int)$_POST["name"];
+        $phone = (int)$_POST["phone"];
+        $option_text = (int)$_POST["option_text"];
+
+        // write new contact
+        $contact = new stdClass();
+        $contact->name = $name;
+        $contact->phone = $phone;
+        $contact->option_text = $option_text;
+        $contact->created=date("Y-m-d H:i:s");
+         
+        // Insert the object into contact table.
+        $result = JFactory::getDbo()->insertObject('#__contact', $contact);
+
+        //Update Buyer Status 
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $fields = array(
+        $db->quoteName('buyer_status') . ' = ' . $db->quote('交易進行中')
+        );
+
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($sid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
+    }
+
+ public function ReceivedCash()
+    {        
+        $sid = (int)$_POST["id"];
+
+        //變更買方交易狀態
+      
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $fields = array(
+        $db->quoteName('buyer_status') . ' = ' . $db->quote('賣方已收款')
+        );
+
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($sid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
+
+        //確認賣方義務是否完成（買方顯示交易完成）
+        $db=JFactory::getDbo();
+        $db->setQuery('SELECT `id` FROM `#__transactions` WHERE `account_id`='.$seller);
+        $db->query();
+        $scontact = $db->loadResult();
+        $scount=sizeof($scontact);
+
+
+    }
+
+     public function SentItem()
+    {        
+        $sid = (int)$_POST["id"];
+
+        //變更買方交易狀態
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $fields = array(
+        $db->quoteName('buyer_status') . ' = ' . $db->quote('賣方已出貨')
+        );
+
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($sid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
+    }
+
 
 }
