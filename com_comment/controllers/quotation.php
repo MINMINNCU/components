@@ -225,40 +225,7 @@ class ccommentControllerQuotation extends JControllerLegacy
         $result = $db->execute();
     }
 
-    public function fillBuyerContact()
-    {        
-        $sid = (int)$_POST["id"];
-        $name = (int)$_POST["name"];
-        $phone = (int)$_POST["phone"];
-        $option_text = (int)$_POST["option_text"];
-
-        // write new contact
-        $contact = new stdClass();
-        $contact->name = $name;
-        $contact->phone = $phone;
-        $contact->option_text = $option_text;
-        $contact->created=date("Y-m-d H:i:s");
-         
-        // Insert the object into contact table.
-        $result = JFactory::getDbo()->insertObject('#__contact', $contact);
-
-        //Update Buyer Status 
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-
-        $fields = array(
-        $db->quoteName('buyer_status') . ' = ' . $db->quote('交易進行中')
-        );
-
-        $conditions = array(
-            $db->quoteName('id') . ' = ' . $db->quote($sid)
-        );       
-        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
-        $db->setQuery($query);        
-        $result = $db->execute();
-    }
-
- public function ReceivedCash()
+ public function receivedCash()
     {        
         $sid = (int)$_POST["id"];
 
@@ -273,7 +240,7 @@ class ccommentControllerQuotation extends JControllerLegacy
 
         }else{
 
-
+            $buyer_status=='賣方已收款';
         }
 
         //變更買方交易狀態
@@ -281,7 +248,7 @@ class ccommentControllerQuotation extends JControllerLegacy
         $query = $db->getQuery(true);
 
         $fields = array(
-        $db->quoteName('buyer_status') . ' = ' . $db->quote('賣方已收款')
+        $db->quoteName('buyer_status') . ' = ' . $db->quote($buyer_status)
         );
 
         $conditions = array(
@@ -294,12 +261,25 @@ class ccommentControllerQuotation extends JControllerLegacy
 
     }
 
-     public function SentItem()
+     public function sentItem()
     {        
         $sid = (int)$_POST["id"];
 
-        //變更買方交易狀態
+        //確認賣方義務是否完成（買方顯示交易完成）
+        $db=JFactory::getDbo();
+        $db->setQuery('SELECT `received_cash` FROM `#__transactions` WHERE `id`='.$sid);
+        $db->query();
+        $sent_item = $db->loadResult();
+        if($received_cash==1){
 
+            $buyer_status=='交易完成';
+
+        }else{
+
+            $buyer_status=='賣方已收款';
+        }
+
+        //變更買方交易狀態
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
@@ -314,6 +294,7 @@ class ccommentControllerQuotation extends JControllerLegacy
         $db->setQuery($query);        
         $result = $db->execute();
     }
+
 
 
 }
