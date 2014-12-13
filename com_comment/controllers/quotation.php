@@ -229,26 +229,11 @@ class ccommentControllerQuotation extends JControllerLegacy
     {        
         $sid = (int)$_POST["id"];
 
-        //確認賣方義務是否完成（買方顯示交易完成）
-        $db=JFactory::getDbo();
-        $db->setQuery('SELECT `sent_item` FROM `#__transactions` WHERE `id`='.$sid);
-        $db->query();
-        $sent_item = $db->loadResult();
-        if($sent_item==1){
-
-            $buyer_status=='交易完成';
-
-        }else{
-
-            $buyer_status=='賣方已收款';
-        }
-
-        //變更買方交易狀態
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
         $fields = array(
-        $db->quoteName('buyer_status') . ' = ' . $db->quote($buyer_status)
+        $db->quoteName('received_cash') . ' = ' . $db->quote(1),
         );
 
         $conditions = array(
@@ -258,28 +243,99 @@ class ccommentControllerQuotation extends JControllerLegacy
         $db->setQuery($query);        
         $result = $db->execute();
 
+        //確認賣方義務是否完成（買方顯示交易完成）
+        $db=JFactory::getDbo();
+        $db->setQuery('SELECT `sent_item` FROM `#__transactions` WHERE `id`='.$sid);
+        $db->query();
+        $sent_item = $db->loadResult();
+
+        $db=JFactory::getDbo();
+        $db->setQuery('SELECT `received_cash` FROM `#__transactions` WHERE `id`='.$sid);
+        $db->query();
+        $received_cash = $db->loadResult();
+
+        if($sent_item==$received_cash){
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $fields = array(
+        $db->quoteName('buyer_status') . ' = ' . $db->quote('交易完成')
+        );
+
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($sid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
+
+        }else{
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $fields = array(
+        $db->quoteName('buyer_status') . ' = ' . $db->quote('賣方已收款')
+        );
+
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($sid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
+        }
 
     }
 
-     public function sentItem()
+      public function sentItem()
     {        
         $sid = (int)$_POST["id"];
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $fields = array(
+        $db->quoteName('sent_item') . ' = ' . $db->quote(1),
+        );
+
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($sid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
 
         //確認賣方義務是否完成（買方顯示交易完成）
         $db=JFactory::getDbo();
         $db->setQuery('SELECT `received_cash` FROM `#__transactions` WHERE `id`='.$sid);
         $db->query();
-        $sent_item = $db->loadResult();
-        if($received_cash==1){
+        $received_cash = $db->loadResult();
 
-            $buyer_status=='交易完成';
+        $db=JFactory::getDbo();
+        $db->setQuery('SELECT `sent_item` FROM `#__transactions` WHERE `id`='.$sid);
+        $db->query();
+        $sent_item = $db->loadResult();
+
+        if($received_cash==$sent_item){
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $fields = array(
+        $db->quoteName('buyer_status') . ' = ' . $db->quote('交易完成')
+        );
+
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($sid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
 
         }else{
 
-            $buyer_status=='賣方已收款';
-        }
-
-        //變更買方交易狀態
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
@@ -293,8 +349,138 @@ class ccommentControllerQuotation extends JControllerLegacy
         $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
         $db->setQuery($query);        
         $result = $db->execute();
+        }
+
     }
 
 
+
+     public function paidCash()
+    {        
+        $bid = (int)$_POST["id"];
+
+          $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $fields = array(
+        $db->quoteName('paid_cash') . ' = ' . $db->quote(1),
+        );
+
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($bid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
+
+        //確認買方義務是否完成（賣方顯示交易完成）
+        $db=JFactory::getDbo();
+        $db->setQuery('SELECT `received_item` FROM `#__transactions` WHERE `id`='.$bid);
+        $db->query();
+        $received_item = $db->loadResult();
+
+        $db=JFactory::getDbo();
+        $db->setQuery('SELECT `paid_cash` FROM `#__transactions` WHERE `id`='.$bid);
+        $db->query();
+        $paid_cash = $db->loadResult();
+        if($received_item==$paid_cash){
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $fields = array(
+        $db->quoteName('buyer_status') . ' = ' . $db->quote('交易完成')
+        );
+
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($bid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
+
+        }else{
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $fields = array(
+        $db->quoteName('seller_status') . ' = ' . $db->quote('買方已付款')
+        );
+
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($bid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
+        }
+    }
+
+     public function receivedItem()
+    {        
+        $bid = (int)$_POST["id"];
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $fields = array(
+        $db->quoteName('received_item') . ' = ' . $db->quote(1),
+        );
+
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($bid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
+
+        //確認買方義務是否完成（賣方顯示交易完成）
+        $db=JFactory::getDbo();
+        $db->setQuery('SELECT `paid_cash` FROM `#__transactions` WHERE `id`='.$bid);
+        $db->query();
+        $paid_cash = $db->loadResult();
+
+        $db=JFactory::getDbo();
+        $db->setQuery('SELECT `received_item` FROM `#__transactions` WHERE `id`='.$bid);
+        $db->query();
+        $received_item = $db->loadResult();
+        if($paid_cash==$received_item){
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $fields = array(
+        $db->quoteName('seller_status') . ' = ' . $db->quote('交易完成')
+        );
+
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($bid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
+
+        }else{
+
+            
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $fields = array(
+        $db->quoteName('seller_status') . ' = ' . $db->quote('買方已收款')
+        );
+
+        $conditions = array(
+            $db->quoteName('id') . ' = ' . $db->quote($bid)
+        );       
+        $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
+        $db->setQuery($query);        
+        $result = $db->execute();
+        }
+
+    }
+
+  
 
 }
