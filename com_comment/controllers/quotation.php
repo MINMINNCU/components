@@ -389,7 +389,7 @@ class ccommentControllerQuotation extends JControllerLegacy
         $query = $db->getQuery(true);
 
         $fields = array(
-        $db->quoteName('buyer_status') . ' = ' . $db->quote('交易完成')
+        $db->quoteName('seller_status') . ' = ' . $db->quote('交易完成')
         );
 
         $conditions = array(
@@ -468,7 +468,7 @@ class ccommentControllerQuotation extends JControllerLegacy
         $query = $db->getQuery(true);
 
         $fields = array(
-        $db->quoteName('seller_status') . ' = ' . $db->quote('買方已收款')
+        $db->quoteName('seller_status') . ' = ' . $db->quote('買方已收貨')
         );
 
         $conditions = array(
