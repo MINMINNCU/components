@@ -95,7 +95,7 @@ class ccommentControllerQuotation extends JControllerLegacy
         $db->setQuery('SELECT `id` FROM `#__contact` WHERE `account_id`='.$buyer);
         $db->query();
         $bcontact = $db->loadResult();
-        $bcount=sizeof($bcontact);
+        $bcount=is_null($bcontact);    
     
         if($scount==0 && $bcount==0){
 
@@ -162,9 +162,9 @@ class ccommentControllerQuotation extends JControllerLegacy
         public function fillSellerContact()
     {        
         $sid = (int)$_POST["id"];
-        $name = (int)$_POST["name"];
-        $phone = (int)$_POST["phone"];
-        $option_text = (int)$_POST["option_text"];
+        $name = $_POST["name"];
+        $phone = $_POST["phone"];
+        $option_text = $_POST["option_text"];
 
         // write new contact
         $contact = new stdClass();
@@ -195,9 +195,9 @@ class ccommentControllerQuotation extends JControllerLegacy
      public function fillBuyerContact()
     {        
         $sid = (int)$_POST["id"];
-        $name = (int)$_POST["name"];
-        $phone = (int)$_POST["phone"];
-        $option_text = (int)$_POST["option_text"];
+        $name = $_POST["name"];
+        $phone = $_POST["phone"];
+        $option_text = $_POST["option_text"];
 
         // write new contact
         $contact = new stdClass();
