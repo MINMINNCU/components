@@ -161,13 +161,15 @@ class ccommentControllerQuotation extends JControllerLegacy
 
         public function fillSellerContact()
     {        
-        $sid = (int)$_POST["id"];
-        $name = (int)$_POST["name"];
-        $phone = (int)$_POST["phone"];
-        $option_text = (int)$_POST["option_text"];
+        $accountId = (int)$_POST["accountId"];
+        $sid = (int)$_POST["sid"];
+        $name = $_POST["name"];
+        $phone = $_POST["phone"];
+        $option_text = $_POST["option_text"];
 
         // write new contact
         $contact = new stdClass();
+        $contact->account_id = $accountId; 
         $contact->name = $name;
         $contact->phone = $phone;
         $contact->option_text = $option_text;
@@ -194,13 +196,16 @@ class ccommentControllerQuotation extends JControllerLegacy
 
      public function fillBuyerContact()
     {        
-        $sid = (int)$_POST["id"];
-        $name = (int)$_POST["name"];
-        $phone = (int)$_POST["phone"];
-        $option_text = (int)$_POST["option_text"];
+        
+        $accountId = (int)$_POST["accountId"];
+        $sid = (int)$_POST["sid"];
+        $name = $_POST["name"];
+        $phone = $_POST["phone"];
+        $option_text = $_POST["option_text"];
 
         // write new contact
         $contact = new stdClass();
+        $contact->account_id = $accountId; 
         $contact->name = $name;
         $contact->phone = $phone;
         $contact->option_text = $option_text;
