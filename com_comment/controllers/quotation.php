@@ -193,6 +193,7 @@ class ccommentControllerQuotation extends JControllerLegacy
         $db->setQuery($query);        
         $result = $db->execute();
     }
+ 
 
      public function fillBuyerContact()
     {        
@@ -227,6 +228,32 @@ class ccommentControllerQuotation extends JControllerLegacy
         );       
         $query->update($db->quoteName('#__transactions'))->set($fields)->where($conditions);         
         $db->setQuery($query);        
+        $result = $db->execute();
+    }
+       public function updateContact()
+    {        
+        $accountId = (int)$_POST["accountId"];
+        $name = $_POST["name"];
+        $phone = $_POST["phone"];
+        $option_text = $_POST["option_text"];
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+         
+        // Fields to update.
+        $fields = array(
+            $db->quoteName('name') . ' = ' . $db->quote($name),
+            $db->quoteName('phone') . ' = ' .  $db->quote($phone),
+            $db->quoteName('option_text') .' = ' .  $db->quote($option_text)
+        );
+         
+        // Conditions for which records should be updated.
+        $conditions = array(
+            $db->quoteName('account_id') . ' = ' . $db->quote($accountId)
+        );
+         
+        $query->update($db->quoteName('#__contact'))->set($fields)->where($conditions);
+        $db->setQuery($query);
         $result = $db->execute();
     }
 
